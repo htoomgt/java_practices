@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import xyz.htoomaungthait.spring_api_crud.dto.ApiResponse;
 import xyz.htoomaungthait.spring_api_crud.models.Student;
 import xyz.htoomaungthait.spring_api_crud.services.StudentService;
 
@@ -18,25 +19,32 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+
+
     @GetMapping("/getAll")
     public List<Student> list() {
         return studentService.listAll();
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody Student student){
-        studentService.save(student);
-        return "New student added";
+    public ApiResponse add(@RequestBody Student student){
+        try {
+            studentService.save(student);
+            return new ApiResponse("success", "student successfully added", student);
+        } catch (Exception e) {
+            return new ApiResponse("error", "student not added", null);
+        }
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> get(@PathVariable Integer id){
+    public ResponseEntity<ApiResponse> get(@PathVariable Integer id){
         try {
             Student student = studentService.get(id);
-            return new ResponseEntity<Student>(student, HttpStatus.OK);
+            return new ResponseEntity<ApiResponse>(new ApiResponse("success", "student successfully search", student), HttpStatus.OK);
 
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<Student>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ApiResponse>(new ApiResponse("error", "not found", null), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -53,7 +61,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Integer id){
+    public ApiResponse delete(@PathVariable Integer id){
         try {
             Student exitStudent = studentService.get(id);
             if(exitStudent != null){
@@ -61,9 +69,9 @@ public class StudentController {
             }
 
         } catch (NoSuchElementException e) {
-            return "Student not found";
+           return new ApiResponse("error", "Student not found", null);
         }
 
-        return "Student deleted";
+        return new ApiResponse("success", "Student deleted", null);
     }
 }
