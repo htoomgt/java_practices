@@ -9,7 +9,9 @@ import xyz.htoomaungthait.emsbackend.mappers.EmployeeMapper;
 import xyz.htoomaungthait.emsbackend.repositories.EmployeeRepository;
 import xyz.htoomaungthait.emsbackend.services.EmployeeService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +35,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<Employee> employeeById = Optional.of(this.employeeRepository.getReferenceById(employeeId));
 
         return EmployeeMapper.mapToEmployeeDto(employeeById.orElseThrow(() -> new ResourceNotFoundException("Employee is not exist with given id :" + employeeId) ));
+    }
+
+    @Override
+    public List<EmployeeDto> getAllEmployee() {
+        List<Employee>  employees = this.employeeRepository.findAll();
+        return employees.stream().map(EmployeeMapper::mapToEmployeeDto).collect(Collectors.toList());
     }
 
 }
