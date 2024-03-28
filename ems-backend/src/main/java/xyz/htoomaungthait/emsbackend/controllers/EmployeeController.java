@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.htoomaungthait.emsbackend.dtos.EmployeeDto;
+import xyz.htoomaungthait.emsbackend.exceptions.ResourceNotFoundException;
 import xyz.htoomaungthait.emsbackend.services.EmployeeService;
 
 import java.util.List;
@@ -45,4 +46,18 @@ public class EmployeeController {
 
         return ResponseEntity.ok(updatedEmployee);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable("id") Long employeeId){
+        try {
+            employeeService.deleteEmployee(employeeId);
+
+        }catch(Exception ex){
+            return  ResponseEntity.status(422).body(ex.getMessage());
+        }
+
+        return ResponseEntity.ok("Employee deleted successfully");
+
+    }
+
 }
