@@ -8,6 +8,7 @@ import xyz.htoomaungthait.emsbackend.dtos.ApiResponse;
 import xyz.htoomaungthait.emsbackend.dtos.EmployeeDto;
 import xyz.htoomaungthait.emsbackend.services.EmployeeService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -24,8 +25,9 @@ public class EmployeeController {
         EmployeeDto savedEmployee = null;
         try{
             savedEmployee = employeeService.createEmployee(employeeDto);
-        }catch(Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", "cannot crate employee this time! Detail => " + ex.getMessage(), null));
+        } catch(Exception ex){
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", "cannot create employee this time! Detail => " + ex.getMessage().substring(0,100), null));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success", "new employee has been created!", savedEmployee));
