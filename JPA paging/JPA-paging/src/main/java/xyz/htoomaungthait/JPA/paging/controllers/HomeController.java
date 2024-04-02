@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(){
-        return "this is JPA pagination app landing page!";
+        return "The is landing page of JPA pagination!";
     }
 }
